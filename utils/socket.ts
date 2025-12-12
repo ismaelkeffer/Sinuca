@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { io, Socket } from 'socket.io-client';
 
 class SocketManager {
@@ -6,12 +7,29 @@ class SocketManager {
     private playerNumber: number | null = null;
 
     connect() {
-        // Connect to local server (change to deployed URL when hosting)
-        this.socket = io('http://localhost:3001', {
-            transports: ['websocket'],
+        let serverUrl = '';
+
+        if (import.meta.env.VITE_SERVER_URL) {
+            // 1. Explicitly configured server URL (e.g., Render/Heroku URL)
+            serverUrl = import.meta.env.VITE_SERVER_URL;
+        } else if (import.meta.env.PROD) {
+            // 2. Production default: Assume backend is on the same domain
+            serverUrl = window.location.origin;
+            console.warn('Using window.location.origin for socket. Set VITE_SERVER_URL if backend is separate.');
+        } else {
+            // 3. Development / Local Network (Mobile testing)
+            const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+            serverUrl = `${protocol}//${window.location.hostname}:3001`;
+        }
+
+        console.log('Connecting to Socket Server at:', serverUrl);
+
+        this.socket = io(serverUrl, {
+            transports: ['websocket', 'polling'],
             reconnection: true,
             reconnectionAttempts: 5,
-            reconnectionDelay: 1000
+            reconnectionDelay: 1000,
+            timeout: 10000
         });
 
         this.socket.on('connect', () => {
@@ -57,6 +75,21 @@ class SocketManager {
     onGameStart(callback: (data: { player1: string; player2: string; currentTurn: number }) => void) {
         if (!this.socket) return;
         this.socket.on('game-start', callback);
+    }
+
+    onConnect(callback: () => void) {
+        if (!this.socket) return;
+        this.socket.on('connect', callback);
+    }
+
+    onDisconnect(callback: () => void) {
+        if (!this.socket) return;
+        this.socket.on('disconnect', callback);
+    }
+
+    onConnectError(callback: (err: any) => void) {
+        if (!this.socket) return;
+        this.socket.on('connect_error', callback);
     }
 
     onPlayerJoined(callback: (data: { playerNumber: number }) => void) {

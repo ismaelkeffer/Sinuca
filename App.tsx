@@ -113,42 +113,62 @@ const App: React.FC = () => {
 
     // Initialize socket connection
     if (gameMode === 'online') {
-      setConnectionStatus('connecting');
-      socketManager.connect();
-      setConnectionStatus('connected');
 
-      // Setup socket listeners
-      socketManager.onGameStart((data) => {
-        setWaitingForPlayer(false);
-        setIsMyTurn(playerNumber === 1);
-      });
+      const setupListeners = () => {
+        socketManager.onConnect(() => setConnectionStatus('connected'));
+        socketManager.onDisconnect(() => setConnectionStatus('disconnected'));
+        socketManager.onConnectError((err) => {
+          console.error("Connection error:", err);
+          setConnectionStatus('disconnected');
+        });
 
-      socketManager.onPlayerJoined(() => {
-        setWaitingForPlayer(false);
-      });
+        socketManager.onGameStart((data) => {
+          setWaitingForPlayer(false);
+          setIsMyTurn(playerNumber === 1);
+        });
 
-      socketManager.onPlayerLeft(() => {
-        alert('Opponent disconnected');
-        setGameMode('menu');
-        setRoomCode(null);
-        setPlayerNumber(null);
-      });
+        socketManager.onPlayerJoined(() => {
+          setWaitingForPlayer(false);
+        });
 
-      socketManager.onOpponentShoot((data) => {
-        // Apply opponent's shot
-        const cueBall = ballsRef.current.find(b => b.type === 'cue');
-        if (cueBall) {
-          cueBall.velocity = data.impulse;
-          setGameState(prev => ({ ...prev, gameStatus: 'moving' }));
-        }
-      });
+        socketManager.onPlayerLeft(() => {
+          alert('Opponent disconnected');
+          setGameMode('menu');
+          setRoomCode(null);
+          setPlayerNumber(null);
+        });
 
-      socketManager.onGameStateUpdate((data) => {
-        setIsMyTurn(data.currentTurn === playerNumber);
-      });
+        socketManager.onOpponentShoot((data) => {
+          const cueBall = ballsRef.current.find(b => b.type === 'cue');
+          if (cueBall) {
+            cueBall.velocity = data.impulse;
+            setGameState(prev => ({ ...prev, gameStatus: 'moving' }));
+          }
+        });
+
+        socketManager.onGameStateUpdate((data) => {
+          setIsMyTurn(data.currentTurn === playerNumber);
+        });
+      };
+
+      setupListeners();
+
+      if (!socketManager.isConnected()) {
+        setConnectionStatus('connecting');
+        socketManager.connect();
+      } else {
+        setConnectionStatus('connected');
+      }
     }
 
     return () => {
+      // Only disconnect if leaving online mode entirely
+      if (gameMode === 'menu') {
+        socketManager.disconnect();
+      }
+      // Note: If just re-rendering, we might want to keep connection? 
+      // Current logic disconnects on unmount/dep change. 
+      // gameMode change triggers this.
       if (gameMode === 'online') {
         socketManager.disconnect();
       }
@@ -192,20 +212,32 @@ const App: React.FC = () => {
   const handleCreateRoom = () => {
     setConnectionStatus('connecting');
     socketManager.connect();
-    setConnectionStatus('connected');
+
+    // Timeout handling
+    const timeoutId = setTimeout(() => {
+      if (connectionStatus !== 'connected') {
+        alert("Falha ao conectar ao servidor. Verifique sua conexão.");
+        setConnectionStatus('disconnected');
+        socketManager.disconnect();
+      }
+    }, 5000);
+
+    // Wait for connection before creating room? 
+    // Socket.io buffers emits, so we can emit immediately.
+    // However, if we want to be sure, we can listen for connect.
 
     socketManager.createRoom((data) => {
+      clearTimeout(timeoutId);
       setRoomCode(data.roomCode);
       setPlayerNumber(data.playerNumber);
       setWaitingForPlayer(true);
-      setGameMode('online');
+      setGameMode('online'); // This moves to lobby view
     });
   };
 
   const handleJoinRoom = (code: string) => {
     setConnectionStatus('connecting');
     socketManager.connect();
-    setConnectionStatus('connected');
 
     socketManager.joinRoom(
       code,
@@ -219,6 +251,7 @@ const App: React.FC = () => {
         alert(error.message);
         setGameMode('menu');
         setConnectionStatus('disconnected');
+        socketManager.disconnect();
       }
     );
   };
