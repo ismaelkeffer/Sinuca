@@ -130,7 +130,7 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 3001;
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT, '0.0.0.0', () => {
     console.log(`🎱 Pool Game Server running on port ${PORT}`);
-    console.log(`WebSocket server ready for connections`);
+    console.log(`WebSocket server ready for connections on all network interfaces`);
 });

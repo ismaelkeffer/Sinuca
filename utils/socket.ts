@@ -6,22 +6,15 @@ class SocketManager {
     private roomCode: string | null = null;
     private playerNumber: number | null = null;
 
+    getServerUrl() {
+        if (import.meta.env.VITE_SERVER_URL) return import.meta.env.VITE_SERVER_URL;
+        if (import.meta.env.PROD) return window.location.origin;
+        const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+        return `${protocol}//${window.location.hostname}:3001`;
+    }
+
     connect() {
-        let serverUrl = '';
-
-        if (import.meta.env.VITE_SERVER_URL) {
-            // 1. Explicitly configured server URL (e.g., Render/Heroku URL)
-            serverUrl = import.meta.env.VITE_SERVER_URL;
-        } else if (import.meta.env.PROD) {
-            // 2. Production default: Assume backend is on the same domain
-            serverUrl = window.location.origin;
-            console.warn('Using window.location.origin for socket. Set VITE_SERVER_URL if backend is separate.');
-        } else {
-            // 3. Development / Local Network (Mobile testing)
-            const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-            serverUrl = `${protocol}//${window.location.hostname}:3001`;
-        }
-
+        const serverUrl = this.getServerUrl();
         console.log('Connecting to Socket Server at:', serverUrl);
 
         this.socket = io(serverUrl, {

@@ -216,7 +216,8 @@ const App: React.FC = () => {
     // Timeout handling
     const timeoutId = setTimeout(() => {
       if (connectionStatus !== 'connected') {
-        alert("Falha ao conectar ao servidor. Verifique sua conexão.");
+        const targetUrl = socketManager.getServerUrl();
+        alert(`Falha ao conectar ao servidor em: ${targetUrl}\n\n1. Verifique se o servidor está rodando (npm run server)\n2. Verifique se seu dispositivo está na mesma rede Wi-Fi.`);
         setConnectionStatus('disconnected');
         socketManager.disconnect();
       }
