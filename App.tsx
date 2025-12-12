@@ -363,18 +363,18 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="w-screen h-screen bg-gray-900 font-sans select-none overflow-hidden flex items-center justify-center">
-      {/* Landscape Layout - Game takes full width, UI on sides */}
-      <div className="w-full h-full flex flex-col lg:flex-row items-center justify-center gap-1 p-1 sm:p-2 lg:p-4">
+    <div className="w-screen h-screen bg-gray-900 font-sans select-none overflow-hidden">
+      {/* Main Container - Centralized */}
+      <div className="w-full h-full flex flex-col items-center justify-center relative">
 
         {/* Title - Hidden in landscape mobile, shown in desktop */}
-        <h1 className="hidden lg:block absolute top-2 left-1/2 transform -translate-x-1/2 text-xl lg:text-3xl font-extrabold text-white tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500 text-center z-20">
+        <h1 className="hidden lg:block absolute top-4 left-1/2 transform -translate-x-1/2 text-xl lg:text-3xl font-extrabold text-white tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500 text-center z-20">
           Sinuca 8 Bolas
         </h1>
 
-        {/* Game Area - Optimized for landscape */}
-        <div className="relative flex-1 w-full h-full flex items-center justify-center">
-          <div className="relative w-full h-full max-w-[95vw] max-h-[95vh] lg:max-w-[1100px] lg:max-h-[600px] flex items-center justify-center">
+        {/* Game Area - Perfectly Centered */}
+        <div className="flex-1 w-full flex items-center justify-center p-2 sm:p-4">
+          <div className="relative w-full h-full max-w-[95vw] max-h-[70vh] lg:max-w-[1100px] lg:max-h-[600px] flex items-center justify-center">
             <PoolTable
               balls={gameState.balls}
               cueBall={gameState.cueBall}
@@ -393,8 +393,8 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        {/* Game UI - Compact for landscape */}
-        <div className="w-full lg:w-auto lg:absolute lg:bottom-4 lg:left-1/2 lg:transform lg:-translate-x-1/2">
+        {/* Game UI - Fixed at bottom center */}
+        <div className="w-full max-w-[1100px] px-2 pb-2 sm:pb-4">
           <GameUI gameState={gameState} onReset={resetGame} />
         </div>
       </div>
