@@ -8,112 +8,155 @@ interface GameUIProps {
 
 const GameUI: React.FC<GameUIProps> = ({ gameState, onReset }) => {
   const { currentPlayer, player1Group, player2Group, winner, gameStatus } = gameState;
-
-  // Helper to determine display names and colors
   const isPlayer1Turn = currentPlayer === 'player1';
 
-  const getPlayerCardClass = (player: Player) => {
+  // --- Components ---
+
+  const MenuButton = () => (
+    <button className="w-12 h-12 bg-green-500 rounded-lg border-b-4 border-green-700 flex flex-col items-center justify-center gap-1 active:border-b-0 active:translate-y-1 transition-all shadow-lg hover:brightness-110">
+      <div className="w-6 h-1 bg-white rounded-full shadow-sm"></div>
+      <div className="w-6 h-1 bg-white rounded-full shadow-sm"></div>
+      <div className="w-6 h-1 bg-white rounded-full shadow-sm"></div>
+    </button>
+  );
+
+  const StarLevel = ({ level, colorClass }: { level: number, colorClass: string }) => (
+    <div className="relative w-12 h-12 flex items-center justify-center">
+      {/* Star Shape Simulation using SVG */}
+      <svg viewBox="0 0 24 24" className={`w-full h-full drop-shadow-md ${colorClass} fill-current`}>
+        <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" />
+      </svg>
+      <span className="absolute text-white font-black text-xs pt-1">{level}</span>
+    </div>
+  );
+
+  const Avatar = ({ player, photoUrl }: { player: Player, photoUrl?: string }) => {
     const isActive = currentPlayer === player && gameStatus !== 'gameover';
-    // Ultra responsive padding for landscape
-    const baseClass = "flex flex-col items-center p-1.5 landscape:p-2 md:p-6 rounded-lg landscape:rounded-xl md:rounded-2xl transition-all duration-500 w-5/12 relative border-2 overflow-hidden";
+    const borderColor = isActive ? 'border-yellow-400' : 'border-gray-500';
 
-    if (isActive) {
-      return `${baseClass} bg-gradient-to-br from-blue-800/90 to-blue-900/90 border-yellow-400 shadow-[0_0_15px_rgba(59,130,246,0.4)] md:shadow-[0_0_30px_rgba(59,130,246,0.4)] scale-100 md:scale-105 z-10`;
-    }
-    return `${baseClass} bg-gray-900/40 border-gray-800 opacity-40 scale-95 grayscale-[0.8]`;
-  };
-
-  const GroupIndicator = ({ group }: { group: 'solid' | 'stripe' | null }) => {
-    if (!group) return <span className="text-[9px] md:text-[10px] text-gray-500 font-mono tracking-widest uppercase mt-1 md:mt-2">Mesa Aberta</span>;
-
+    // Gradient border look
     return (
-      <div className="flex flex-col items-center gap-1 md:gap-2 mt-2 md:mt-3">
-        <div className="flex gap-1">
-          {group === 'solid' ? (
-            // Visual representation of solids
-            [1, 2, 3].map(i => <div key={i} className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-red-500 shadow-sm" />)
-          ) : (
-            // Visual representation of stripes
-            [1, 2, 3].map(i => <div key={i} className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-white border-2 md:border-4 border-green-600 shadow-sm" />)
-          )}
-        </div>
-        <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-white/80 whitespace-nowrap">
-          {group === 'solid' ? 'Lisas' : 'Listradas'}
-        </span>
+      <div className={`relative w-14 h-14 md:w-16 md:h-16 rounded-xl border-4 ${borderColor} bg-gray-800 shadow-lg overflow-hidden transition-all duration-300 ${isActive ? 'scale-110 ring-2 ring-yellow-400/50 z-10' : 'opacity-80 grayscale-[0.5]'}`}>
+        {photoUrl ? (
+          <img src={photoUrl} alt={player} className="w-full h-full object-cover" />
+        ) : (
+          // Fallback Avatar
+          <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+            <span className="text-xl font-bold text-white">{player === 'player1' ? 'P1' : 'P2'}</span>
+          </div>
+        )}
       </div>
     );
-  };
+  }
+
+  const PlayerInfoBar = ({ player, group, name, align }: { player: Player, group: 'solid' | 'stripe' | null, name: string, align: 'left' | 'right' }) => {
+    const isLeft = align === 'left';
+    // Simplified ball indicators
+    const balls = [];
+    if (group) {
+      if (group === 'solid') {
+        for (let i = 1; i <= 7; i++) balls.push({ id: i, color: 'bg-red-500' }); // Simplified color
+      } else {
+        for (let i = 9; i <= 15; i++) balls.push({ id: i, color: 'bg-yellow-400 border-2 border-green-600' }); // Simplified color
+      }
+    } else {
+      // Show placeholders if groups not set
+      for (let i = 0; i < 7; i++) balls.push({ id: i, color: 'bg-gray-700' });
+    }
+
+    // Determine balls aiming/remaining logic would go here, for now just static list
+    // In a real app we would filter out potted balls. 
+    // For UI demo, showing all 7 indicators.
+
+    return (
+      <div className={`flex flex-col ${isLeft ? 'items-end' : 'items-start'} justify-center w-32 md:w-48`}>
+        {/* Name Bar */}
+        <div className={`
+                w-full h-6 bg-gray-900/80 rounded-full flex items-center px-3 border border-white/10
+                ${isLeft ? 'justify-end' : 'justify-start'}
+                ${currentPlayer === player ? 'bg-gradient-to-r from-gray-800 to-blue-900 border-blue-500/50' : ''}
+            `}>
+          <span className="text-white font-bold text-xs md:text-sm tracking-wide">{name}</span>
+        </div>
+
+        {/* Balls Indicator - Underneath */}
+        <div className={`flex gap-1 mt-1 ${isLeft ? 'justify-end' : 'justify-start'}`}>
+          {balls.slice(0, 7).map((b, i) => ( // Show first 5-6 to fit
+            <div key={i} className={`w-3 h-3 md:w-4 md:h-4 rounded-full shadow-sm ${b.color}`}></div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  const CentralDisplay = () => (
+    <div className="flex flex-col items-center mx-2 md:mx-4">
+      <div className="bg-black/60 rounded-xl border border-yellow-600/30 px-3 py-1 flex items-center gap-2">
+        {/* Coins Icon */}
+        <div className="w-4 h-4 md:w-5 md:h-5 bg-yellow-500 rounded-full border border-yellow-200 shadow-[0_0_10px_orange]"></div>
+        <span className="text-yellow-400 font-black text-sm md:text-xl font-mono">200</span>
+      </div>
+    </div>
+  )
+
+  const Controls = () => (
+    <div className="flex items-center gap-2 md:gap-4 ml-2">
+      {/* Cue Control */}
+      <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gray-200 border-4 border-gray-400 shadow-inner flex items-center justify-center relative cursor-pointer active:scale-95 transition-transform">
+        <div className="w-2 h-2 bg-red-600 rounded-full absolute top-2 right-3"></div> {/* Spin dot simulation */}
+        <div className="text-[8px] text-gray-500 absolute bottom-1">SPIN</div>
+      </div>
+      {/* Cues Selector */}
+      <button className="w-10 h-10 md:w-12 md:h-12 bg-blue-500 rounded-lg border-b-4 border-blue-700 flex items-center justify-center active:border-b-0 active:translate-y-1 transition-all">
+        <div className="w-8 h-8 relative">
+          <div className="absolute w-[2px] h-full bg-yellow-200 left-1/2 -rotate-45 transform origin-center border border-black/20"></div>
+          <div className="absolute w-[2px] h-full bg-white left-1/2 rotate-12 transform origin-center border border-black/20 ml-1"></div>
+        </div>
+      </button>
+    </div>
+  )
+
 
   return (
-    <div className="w-full max-w-[816px] mt-2 md:mt-6 flex flex-col gap-3 md:gap-6 select-none pointer-events-none">
+    <div className="w-full flex justify-between items-start pointer-events-auto">
+      {/* Main Top Bar Container */}
+      <div className="w-full bg-gradient-to-b from-gray-800 via-gray-900 to-black/90 border-b border-white/10 shadow-2xl flex items-center justify-between px-2 py-2 md:px-6 md:py-3 z-50 rounded-b-xl lg:rounded-b-none lg:rounded-xl mx-auto max-w-[1200px]">
 
-      {/* Top Status Bar - New Addition for prominence */}
-      <div className="flex justify-center">
-        <div className={`
-            px-6 py-2 md:px-10 md:py-3 rounded-full text-xs md:text-sm font-black uppercase tracking-widest transition-colors duration-300 shadow-xl border-2
-            ${gameStatus === 'gameover' ? 'bg-purple-600 border-purple-400 text-white' :
-            isPlayer1Turn ? 'bg-blue-600 border-blue-400 text-white' : 'bg-orange-600 border-orange-400 text-white'}
-         `}>
-          {gameStatus === 'gameover'
-            ? 'Partida Finalizada'
-            : `Vez do ${currentPlayer === 'player1' ? 'Jogador 1' : 'Jogador 2'}`}
+        {/* Left Group */}
+        <div className="flex items-center gap-2 md:gap-4">
+          <MenuButton />
+
+          {/* Player 1 Section */}
+          <div className="flex items-center gap-2">
+            <StarLevel level={43} colorClass="text-pink-500" />
+            {/* Balls & Name - Hidden on very small screens or adapted? keeping simple for now */}
+            <div className="flex items-center gap-[-4px]"> {/* Negative gap for overlap if needed */}
+              <PlayerInfoBar player="player1" group={player1Group} name="Emely" align="left" />
+              <Avatar player="player1" photoUrl="https://api.dicebear.com/7.x/avataaars/svg?seed=Emely" /> {/* Using DiceBear for avatar content */}
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Main Scoreboard */}
-      <div className="flex justify-between items-stretch px-1 md:px-2">
+        {/* Center */}
+        <CentralDisplay />
 
-        {/* Player 1 Card */}
-        <div className={getPlayerCardClass('player1')}>
-          {/* Active Indicator Background Effect */}
-          {isPlayer1Turn && gameStatus !== 'gameover' && (
-            <div className="absolute inset-0 bg-blue-500/10 animate-pulse rounded-2xl" />
-          )}
-
-          <div className="z-10 flex flex-col items-center w-full">
-            <span className="text-[10px] md:text-xs font-bold text-blue-400 uppercase tracking-wider mb-0 md:mb-1">Jogador 1</span>
-            <div className="text-3xl md:text-5xl font-black text-white mb-0 md:mb-1 shadow-black drop-shadow-lg">P1</div>
-            <GroupIndicator group={player1Group} />
+        {/* Right Group */}
+        <div className="flex items-center gap-2 md:gap-4">
+          {/* Player 2 Section */}
+          <div className="flex items-center gap-2">
+            <Avatar player="player2" photoUrl="https://api.dicebear.com/7.x/avataaars/svg?seed=Mike" />
+            <PlayerInfoBar player="player2" group={player2Group} name="Mike" align="right" />
+            <StarLevel level={46} colorClass="text-blue-500" />
           </div>
 
-          {isPlayer1Turn && gameStatus !== 'gameover' && (
-            <div className="absolute -top-3 md:-top-4 bg-yellow-400 text-black text-[9px] md:text-xs font-black px-4 py-1 md:px-6 md:py-2 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(250,204,21,0.6)] animate-bounce border-2 border-white z-20 whitespace-nowrap">
-              Sua Vez
-            </div>
-          )}
+          <Controls />
         </div>
 
-        {/* VS Divider */}
-        <div className="flex flex-col items-center justify-center w-2/12">
-          <div className="w-px h-10 md:h-20 bg-gradient-to-b from-transparent via-white/10 to-transparent" />
-          <span className="text-xl md:text-2xl font-black text-white/10 italic my-1 md:my-2">VS</span>
-          <div className="w-px h-10 md:h-20 bg-gradient-to-b from-transparent via-white/10 to-transparent" />
-        </div>
-
-        {/* Player 2 Card */}
-        <div className={getPlayerCardClass('player2')}>
-          {/* Active Indicator Background Effect */}
-          {!isPlayer1Turn && gameStatus !== 'gameover' && (
-            <div className="absolute inset-0 bg-orange-500/10 animate-pulse rounded-2xl" />
-          )}
-
-          <div className="z-10 flex flex-col items-center w-full">
-            <span className="text-[10px] md:text-xs font-bold text-orange-400 uppercase tracking-wider mb-0 md:mb-1">Jogador 2</span>
-            <div className="text-3xl md:text-5xl font-black text-white mb-0 md:mb-1 shadow-black drop-shadow-lg">P2</div>
-            <GroupIndicator group={player2Group} />
-          </div>
-
-          {!isPlayer1Turn && gameStatus !== 'gameover' && (
-            <div className="absolute -top-3 md:-top-4 bg-yellow-400 text-black text-[9px] md:text-xs font-black px-4 py-1 md:px-6 md:py-2 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(250,204,21,0.6)] animate-bounce border-2 border-white z-20 whitespace-nowrap">
-              Sua Vez
-            </div>
-          )}
-        </div>
       </div>
 
-      {/* Game Over Modal */}
+      {/* Game Over Modal (Original Logic Preserved but styled slightly better) */}
       {gameStatus === 'gameover' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in zoom-in duration-300 pointer-events-auto">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in zoom-in duration-300 pointer-events-auto">
           <div className="bg-gray-900 border-2 border-white/10 text-white p-6 md:p-12 rounded-3xl shadow-2xl text-center w-full max-w-lg relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-900/50 to-blue-900/50" />
 
@@ -136,16 +179,6 @@ const GameUI: React.FC<GameUIProps> = ({ gameState, onReset }) => {
           </div>
         </div>
       )}
-
-      {/* Footer Rules Summary - Hidden in landscape mobile */}
-      <div className="hidden md:block mt-1 md:mt-4 bg-black/40 rounded-xl p-3 md:p-4 text-center border border-white/5 backdrop-blur-md">
-        <h3 className="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 md:mb-2">Regras do Jogo (Bola 8)</h3>
-        <p className="text-[9px] md:text-[11px] text-gray-500 leading-relaxed max-w-2xl mx-auto">
-          <strong>Objetivo:</strong> Encaçape seu grupo e depois a bola 8. <br className="md:hidden" />
-          <strong>Falta:</strong> Encaçapar a bola branca a reposiciona. <br className="md:hidden" />
-          <strong>Derrota:</strong> Encaçapar a bola 8 antes da hora ou com falta.
-        </p>
-      </div>
     </div>
   );
 };

@@ -366,11 +366,9 @@ const App: React.FC = () => {
     <div className="w-screen h-screen bg-gray-900 font-sans select-none overflow-hidden">
       {/* Main Container - Centralized */}
       <div className="w-full h-full flex flex-col items-center justify-center relative">
+        <GameUI gameState={gameState} onReset={resetGame} />
 
-        {/* Title - Hidden in landscape mobile, shown in desktop */}
-        <h1 className="hidden lg:block absolute top-4 left-1/2 transform -translate-x-1/2 text-xl lg:text-3xl font-extrabold text-white tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500 text-center z-20">
-          Sinuca 8 Bolas
-        </h1>
+
 
         {/* Game Area - Perfectly Centered */}
         <div className="flex-1 w-full flex items-center justify-center p-2 sm:p-4">
@@ -393,10 +391,8 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        {/* Game UI - Fixed at bottom center */}
-        <div className="w-full max-w-[1100px] px-2 pb-2 sm:pb-4">
-          <GameUI gameState={gameState} onReset={resetGame} />
-        </div>
+
+
       </div>
 
       {/* Landscape orientation hint for mobile */}
