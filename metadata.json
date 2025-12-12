@@ -1,0 +1,5 @@
+{
+  "name": "React 8-Ball Pool",
+  "description": "A 2D 8-ball pool game with physics, local multiplayer, and drag-to-shoot controls.",
+  "requestFramePermissions": []
+}
