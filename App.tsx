@@ -190,7 +190,6 @@ const App: React.FC = () => {
   };
 
   const handleCreateRoom = () => {
-    setGameMode('online');
     setConnectionStatus('connecting');
     socketManager.connect();
     setConnectionStatus('connected');
@@ -199,11 +198,11 @@ const App: React.FC = () => {
       setRoomCode(data.roomCode);
       setPlayerNumber(data.playerNumber);
       setWaitingForPlayer(true);
+      setGameMode('online');
     });
   };
 
   const handleJoinRoom = (code: string) => {
-    setGameMode('online');
     setConnectionStatus('connecting');
     socketManager.connect();
     setConnectionStatus('connected');
@@ -214,6 +213,7 @@ const App: React.FC = () => {
         setRoomCode(data.roomCode);
         setPlayerNumber(data.playerNumber);
         setWaitingForPlayer(false);
+        setGameMode('online');
       },
       (error) => {
         alert(error.message);
@@ -406,7 +406,7 @@ const App: React.FC = () => {
       </div>
 
       {/* Multiplayer Menu */}
-      {(gameMode === 'menu' || (gameMode === 'online' && roomCode)) && (
+      {(gameMode === 'menu' || (gameMode === 'online' && roomCode && waitingForPlayer)) && (
         <MultiplayerMenu
           onLocalPlay={handleLocalPlay}
           onCreateRoom={handleCreateRoom}
