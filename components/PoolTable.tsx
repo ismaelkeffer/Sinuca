@@ -375,7 +375,7 @@ const PoolTable: React.FC<PoolTableProps> = ({ balls, cueBall, isAiming, onShoot
           ctx.fillStyle = 'white';
           ctx.font = 'bold 12px Arial';
           ctx.textAlign = 'center';
-          ctx.fillText('POWER', meterX + meterWidth / 2, meterY - 10);
+          ctx.fillText('POTÊNCIA', meterX + meterWidth / 2, meterY - 10);
         }
       }
     }
@@ -479,7 +479,7 @@ const PoolTable: React.FC<PoolTableProps> = ({ balls, cueBall, isAiming, onShoot
       />
       {isAiming && !dragStart && (
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 text-white/50 text-xs md:text-sm pointer-events-none select-none whitespace-nowrap">
-          Drag to shoot
+          Arraste para atirar
         </div>
       )}
     </div>

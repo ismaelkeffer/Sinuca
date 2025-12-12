@@ -24,7 +24,7 @@ const GameUI: React.FC<GameUIProps> = ({ gameState, onReset }) => {
   };
 
   const GroupIndicator = ({ group }: { group: 'solid' | 'stripe' | null }) => {
-    if (!group) return <span className="text-[9px] md:text-[10px] text-gray-500 font-mono tracking-widest uppercase mt-1 md:mt-2">Open Table</span>;
+    if (!group) return <span className="text-[9px] md:text-[10px] text-gray-500 font-mono tracking-widest uppercase mt-1 md:mt-2">Mesa Aberta</span>;
 
     return (
       <div className="flex flex-col items-center gap-1 md:gap-2 mt-2 md:mt-3">
@@ -38,7 +38,7 @@ const GameUI: React.FC<GameUIProps> = ({ gameState, onReset }) => {
           )}
         </div>
         <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-white/80 whitespace-nowrap">
-          {group === 'solid' ? 'Solids' : 'Stripes'}
+          {group === 'solid' ? 'Lisas' : 'Listradas'}
         </span>
       </div>
     );
@@ -55,8 +55,8 @@ const GameUI: React.FC<GameUIProps> = ({ gameState, onReset }) => {
             isPlayer1Turn ? 'bg-blue-600 border-blue-400 text-white' : 'bg-orange-600 border-orange-400 text-white'}
          `}>
           {gameStatus === 'gameover'
-            ? 'Match Finished'
-            : `${currentPlayer === 'player1' ? 'Player 1' : 'Player 2'} Turn`}
+            ? 'Partida Finalizada'
+            : `Vez do ${currentPlayer === 'player1' ? 'Jogador 1' : 'Jogador 2'}`}
         </div>
       </div>
 
@@ -71,14 +71,14 @@ const GameUI: React.FC<GameUIProps> = ({ gameState, onReset }) => {
           )}
 
           <div className="z-10 flex flex-col items-center w-full">
-            <span className="text-[10px] md:text-xs font-bold text-blue-400 uppercase tracking-wider mb-0 md:mb-1">Player 1</span>
+            <span className="text-[10px] md:text-xs font-bold text-blue-400 uppercase tracking-wider mb-0 md:mb-1">Jogador 1</span>
             <div className="text-3xl md:text-5xl font-black text-white mb-0 md:mb-1 shadow-black drop-shadow-lg">P1</div>
             <GroupIndicator group={player1Group} />
           </div>
 
           {isPlayer1Turn && gameStatus !== 'gameover' && (
             <div className="absolute -top-3 md:-top-4 bg-yellow-400 text-black text-[9px] md:text-xs font-black px-4 py-1 md:px-6 md:py-2 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(250,204,21,0.6)] animate-bounce border-2 border-white z-20 whitespace-nowrap">
-              Your Turn
+              Sua Vez
             </div>
           )}
         </div>
@@ -98,14 +98,14 @@ const GameUI: React.FC<GameUIProps> = ({ gameState, onReset }) => {
           )}
 
           <div className="z-10 flex flex-col items-center w-full">
-            <span className="text-[10px] md:text-xs font-bold text-orange-400 uppercase tracking-wider mb-0 md:mb-1">Player 2</span>
+            <span className="text-[10px] md:text-xs font-bold text-orange-400 uppercase tracking-wider mb-0 md:mb-1">Jogador 2</span>
             <div className="text-3xl md:text-5xl font-black text-white mb-0 md:mb-1 shadow-black drop-shadow-lg">P2</div>
             <GroupIndicator group={player2Group} />
           </div>
 
           {!isPlayer1Turn && gameStatus !== 'gameover' && (
             <div className="absolute -top-3 md:-top-4 bg-yellow-400 text-black text-[9px] md:text-xs font-black px-4 py-1 md:px-6 md:py-2 rounded-full uppercase tracking-widest shadow-[0_0_15px_rgba(250,204,21,0.6)] animate-bounce border-2 border-white z-20 whitespace-nowrap">
-              Your Turn
+              Sua Vez
             </div>
           )}
         </div>
@@ -119,18 +119,18 @@ const GameUI: React.FC<GameUIProps> = ({ gameState, onReset }) => {
 
             <div className="relative z-10">
               <h2 className="text-4xl md:text-6xl font-black mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-red-500 drop-shadow-sm">
-                {winner === 'player1' ? 'P1 WINS!' : 'P2 WINS!'}
+                {winner === 'player1' ? 'J1 VENCEU!' : 'J2 VENCEU!'}
               </h2>
 
               <p className="text-gray-300 mb-6 md:mb-10 text-sm md:text-lg">
-                Great match! {winner === 'player1' ? 'Player 1' : 'Player 2'} potted the 8-Ball correctly.
+                Ótima partida! {winner === 'player1' ? 'Jogador 1' : 'Jogador 2'} encaçapou a bola 8 corretamente.
               </p>
 
               <button
                 onClick={onReset}
                 className="px-8 py-3 md:px-12 md:py-4 bg-white hover:bg-gray-100 text-black rounded-full font-black text-sm md:text-lg tracking-widest shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all transform hover:scale-105 active:scale-95"
               >
-                PLAY AGAIN
+                JOGAR NOVAMENTE
               </button>
             </div>
           </div>
@@ -139,11 +139,11 @@ const GameUI: React.FC<GameUIProps> = ({ gameState, onReset }) => {
 
       {/* Footer Rules Summary - Hidden in landscape mobile */}
       <div className="hidden md:block mt-1 md:mt-4 bg-black/40 rounded-xl p-3 md:p-4 text-center border border-white/5 backdrop-blur-md">
-        <h3 className="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 md:mb-2">Game Rules (8-Ball)</h3>
+        <h3 className="text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 md:mb-2">Regras do Jogo (Bola 8)</h3>
         <p className="text-[9px] md:text-[11px] text-gray-500 leading-relaxed max-w-2xl mx-auto">
-          <strong>Objective:</strong> Pot your group then the 8-Ball. <br className="md:hidden" />
-          <strong>Foul:</strong> Potting cue ball resets it. <br className="md:hidden" />
-          <strong>Loss:</strong> Potting 8-Ball early or scratching on it.
+          <strong>Objetivo:</strong> Encaçape seu grupo e depois a bola 8. <br className="md:hidden" />
+          <strong>Falta:</strong> Encaçapar a bola branca a reposiciona. <br className="md:hidden" />
+          <strong>Derrota:</strong> Encaçapar a bola 8 antes da hora ou com falta.
         </p>
       </div>
     </div>

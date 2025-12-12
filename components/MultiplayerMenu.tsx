@@ -37,26 +37,26 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
                     <div className="text-center">
                         <div className="text-6xl mb-4">🎱</div>
                         <h2 className="text-3xl font-bold text-white mb-4">
-                            {waitingForPlayer ? 'Waiting for Opponent...' : 'Game Ready!'}
+                            {waitingForPlayer ? 'Aguardando Oponente...' : 'Jogo Pronto!'}
                         </h2>
 
                         <div className="bg-gray-900 rounded-lg p-6 mb-6">
-                            <p className="text-gray-400 text-sm mb-2">Room Code</p>
+                            <p className="text-gray-400 text-sm mb-2">Código da Sala</p>
                             <div className="text-5xl font-black text-yellow-400 tracking-widest mb-4">
                                 {roomCode}
                             </div>
-                            <p className="text-gray-500 text-xs">Share this code with your friend</p>
+                            <p className="text-gray-500 text-xs">Compartilhe este código com seu amigo</p>
                         </div>
 
                         <div className="flex items-center justify-center gap-3 mb-6">
                             <div className={`w-3 h-3 rounded-full ${connectionStatus === 'connected' ? 'bg-green-500' : 'bg-red-500'} animate-pulse`}></div>
                             <span className="text-sm text-gray-400">
-                                {connectionStatus === 'connected' ? 'Connected' : 'Connecting...'}
+                                {connectionStatus === 'connected' ? 'Conectado' : 'Conectando...'}
                             </span>
                         </div>
 
                         <div className="text-sm text-gray-400 mb-4">
-                            You are <span className="text-blue-400 font-bold">Player {playerNumber}</span>
+                            Você é <span className="text-blue-400 font-bold">Jogador {playerNumber}</span>
                         </div>
 
                         {waitingForPlayer && (
@@ -77,9 +77,9 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
                 <div className="text-center mb-8">
                     <div className="text-7xl mb-4">🎱</div>
                     <h1 className="text-5xl font-black text-white mb-2 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500">
-                        8-Ball Pool
+                        Sinuca 8 Bolas
                     </h1>
-                    <p className="text-gray-400">Choose your game mode</p>
+                    <p className="text-gray-400">Escolha o modo de jogo</p>
                 </div>
 
                 <div className="space-y-4">
@@ -89,8 +89,8 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
                         className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-6 px-8 rounded-xl transition-all transform hover:scale-105 active:scale-95 shadow-xl"
                     >
                         <div className="text-2xl mb-1">👥</div>
-                        <div className="text-xl">Local Multiplayer</div>
-                        <div className="text-xs text-blue-200 mt-1">Play on the same device</div>
+                        <div className="text-xl">Multiplayer Local</div>
+                        <div className="text-xs text-blue-200 mt-1">Jogar no mesmo dispositivo</div>
                     </button>
 
                     {/* Create Room */}
@@ -99,8 +99,8 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
                         className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 text-white font-bold py-6 px-8 rounded-xl transition-all transform hover:scale-105 active:scale-95 shadow-xl"
                     >
                         <div className="text-2xl mb-1">🌐</div>
-                        <div className="text-xl">Create Online Room</div>
-                        <div className="text-xs text-green-200 mt-1">Get a code to share</div>
+                        <div className="text-xl">Criar Sala Online</div>
+                        <div className="text-xs text-green-200 mt-1">Obter código para compartilhar</div>
                     </button>
 
                     {/* Join Room */}
@@ -110,12 +110,12 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
                             className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-bold py-6 px-8 rounded-xl transition-all transform hover:scale-105 active:scale-95 shadow-xl"
                         >
                             <div className="text-2xl mb-1">🔗</div>
-                            <div className="text-xl">Join Online Room</div>
-                            <div className="text-xs text-purple-200 mt-1">Enter a room code</div>
+                            <div className="text-xl">Entrar em Sala Online</div>
+                            <div className="text-xs text-purple-200 mt-1">Digite o código da sala</div>
                         </button>
                     ) : (
                         <form onSubmit={handleJoinSubmit} className="bg-gray-800 rounded-xl p-6 border-2 border-purple-500">
-                            <label className="block text-white font-bold mb-3">Enter Room Code</label>
+                            <label className="block text-white font-bold mb-3">Digite o Código da Sala</label>
                             <input
                                 type="text"
                                 value={joinCode}
@@ -134,14 +134,14 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
                                     }}
                                     className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition-all"
                                 >
-                                    Cancel
+                                    Cancelar
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={joinCode.length !== 6}
                                     className="flex-1 bg-purple-600 hover:bg-purple-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-all"
                                 >
-                                    Join
+                                    Entrar
                                 </button>
                             </div>
                         </form>
@@ -152,9 +152,9 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
                     <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
                         <div className={`w-2 h-2 rounded-full ${connectionStatus === 'connected' ? 'bg-green-500' : connectionStatus === 'connecting' ? 'bg-yellow-500' : 'bg-red-500'}`}></div>
                         <span>
-                            {connectionStatus === 'connected' ? 'Server Connected' :
-                                connectionStatus === 'connecting' ? 'Connecting...' :
-                                    'Server Offline'}
+                            {connectionStatus === 'connected' ? 'Servidor Conectado' :
+                                connectionStatus === 'connecting' ? 'Conectando...' :
+                                    'Servidor Offline'}
                         </span>
                     </div>
                 </div>

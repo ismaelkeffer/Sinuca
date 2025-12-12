@@ -369,7 +369,7 @@ const App: React.FC = () => {
 
         {/* Title - Hidden in landscape mobile, shown in desktop */}
         <h1 className="hidden lg:block absolute top-2 left-1/2 transform -translate-x-1/2 text-xl lg:text-3xl font-extrabold text-white tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500 text-center z-20">
-          React 8-Ball Pool
+          Sinuca 8 Bolas
         </h1>
 
         {/* Game Area - Optimized for landscape */}
@@ -385,7 +385,7 @@ const App: React.FC = () => {
               <div className="absolute inset-0 bg-black/50 z-10 rounded-lg flex items-center justify-center">
                 <div className="text-center">
                   <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-                    {gameState.winner === 'player1' ? '🏆 Player 1 Wins!' : '🏆 Player 2 Wins!'}
+                    {gameState.winner === 'player1' ? '🏆 Jogador 1 Venceu!' : '🏆 Jogador 2 Venceu!'}
                   </h2>
                 </div>
               </div>
@@ -403,8 +403,8 @@ const App: React.FC = () => {
       <div className="hidden portrait:block landscape:hidden fixed inset-0 bg-gray-900 z-50 flex items-center justify-center p-8 sm:hidden">
         <div className="text-center">
           <div className="text-6xl mb-4">📱</div>
-          <h2 className="text-2xl font-bold text-white mb-2">Rotate Your Device</h2>
-          <p className="text-gray-400">This game is best played in landscape mode</p>
+          <h2 className="text-2xl font-bold text-white mb-2">Gire Seu Dispositivo</h2>
+          <p className="text-gray-400">Este jogo funciona melhor no modo paisagem</p>
           <div className="mt-6 text-4xl animate-pulse">↻</div>
         </div>
       </div>
