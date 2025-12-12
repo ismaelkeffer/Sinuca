@@ -13,20 +13,20 @@ const GameUI: React.FC<GameUIProps> = ({ gameState, onReset }) => {
   // --- Components ---
 
   const MenuButton = () => (
-    <button className="w-12 h-12 bg-green-500 rounded-lg border-b-4 border-green-700 flex flex-col items-center justify-center gap-1 active:border-b-0 active:translate-y-1 transition-all shadow-lg hover:brightness-110">
-      <div className="w-6 h-1 bg-white rounded-full shadow-sm"></div>
-      <div className="w-6 h-1 bg-white rounded-full shadow-sm"></div>
-      <div className="w-6 h-1 bg-white rounded-full shadow-sm"></div>
+    <button className="w-8 h-8 md:w-12 md:h-12 bg-green-500 rounded-lg border-b-2 md:border-b-4 border-green-700 flex flex-col items-center justify-center gap-0.5 md:gap-1 active:border-b-0 active:translate-y-1 transition-all shadow-lg hover:brightness-110">
+      <div className="w-4 h-0.5 md:w-6 md:h-1 bg-white rounded-full shadow-sm"></div>
+      <div className="w-4 h-0.5 md:w-6 md:h-1 bg-white rounded-full shadow-sm"></div>
+      <div className="w-4 h-0.5 md:w-6 md:h-1 bg-white rounded-full shadow-sm"></div>
     </button>
   );
 
   const StarLevel = ({ level, colorClass }: { level: number, colorClass: string }) => (
-    <div className="relative w-12 h-12 flex items-center justify-center">
+    <div className="relative w-8 h-8 md:w-12 md:h-12 flex items-center justify-center">
       {/* Star Shape Simulation using SVG */}
       <svg viewBox="0 0 24 24" className={`w-full h-full drop-shadow-md ${colorClass} fill-current`}>
         <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z" />
       </svg>
-      <span className="absolute text-white font-black text-xs pt-1">{level}</span>
+      <span className="absolute text-white font-black text-[10px] md:text-xs pt-0.5 md:pt-1">{level}</span>
     </div>
   );
 
@@ -36,13 +36,13 @@ const GameUI: React.FC<GameUIProps> = ({ gameState, onReset }) => {
 
     // Gradient border look
     return (
-      <div className={`relative w-14 h-14 md:w-16 md:h-16 rounded-xl border-4 ${borderColor} bg-gray-800 shadow-lg overflow-hidden transition-all duration-300 ${isActive ? 'scale-110 ring-2 ring-yellow-400/50 z-10' : 'opacity-80 grayscale-[0.5]'}`}>
+      <div className={`relative w-10 h-10 md:w-16 md:h-16 rounded-xl border-2 md:border-4 ${borderColor} bg-gray-800 shadow-lg overflow-hidden transition-all duration-300 ${isActive ? 'scale-110 ring-1 md:ring-2 ring-yellow-400/50 z-10' : 'opacity-80 grayscale-[0.5]'}`}>
         {photoUrl ? (
           <img src={photoUrl} alt={player} className="w-full h-full object-cover" />
         ) : (
           // Fallback Avatar
           <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-            <span className="text-xl font-bold text-white">{player === 'player1' ? 'P1' : 'P2'}</span>
+            <span className="text-sm md:text-xl font-bold text-white">{player === 'player1' ? 'P1' : 'P2'}</span>
           </div>
         )}
       </div>
@@ -57,7 +57,7 @@ const GameUI: React.FC<GameUIProps> = ({ gameState, onReset }) => {
       if (group === 'solid') {
         for (let i = 1; i <= 7; i++) balls.push({ id: i, color: 'bg-red-500' }); // Simplified color
       } else {
-        for (let i = 9; i <= 15; i++) balls.push({ id: i, color: 'bg-yellow-400 border-2 border-green-600' }); // Simplified color
+        for (let i = 9; i <= 15; i++) balls.push({ id: i, color: 'bg-yellow-400 border md:border-2 border-green-600' }); // Simplified color
       }
     } else {
       // Show placeholders if groups not set
@@ -69,20 +69,20 @@ const GameUI: React.FC<GameUIProps> = ({ gameState, onReset }) => {
     // For UI demo, showing all 7 indicators.
 
     return (
-      <div className={`flex flex-col ${isLeft ? 'items-end' : 'items-start'} justify-center w-32 md:w-48`}>
+      <div className={`flex flex-col ${isLeft ? 'items-end' : 'items-start'} justify-center w-20 md:w-48`}>
         {/* Name Bar */}
         <div className={`
-                w-full h-6 bg-gray-900/80 rounded-full flex items-center px-3 border border-white/10
+                w-full h-4 md:h-6 bg-gray-900/80 rounded-full flex items-center px-2 md:px-3 border border-white/10
                 ${isLeft ? 'justify-end' : 'justify-start'}
                 ${currentPlayer === player ? 'bg-gradient-to-r from-gray-800 to-blue-900 border-blue-500/50' : ''}
             `}>
-          <span className="text-white font-bold text-xs md:text-sm tracking-wide">{name}</span>
+          <span className="text-white font-bold text-[10px] md:text-sm tracking-wide truncate">{name}</span>
         </div>
 
         {/* Balls Indicator - Underneath */}
-        <div className={`flex gap-1 mt-1 ${isLeft ? 'justify-end' : 'justify-start'}`}>
+        <div className={`flex gap-0.5 md:gap-1 mt-0.5 md:mt-1 ${isLeft ? 'justify-end' : 'justify-start'} flex-wrap h-3 md:h-auto overflow-hidden`}>
           {balls.slice(0, 7).map((b, i) => ( // Show first 5-6 to fit
-            <div key={i} className={`w-3 h-3 md:w-4 md:h-4 rounded-full shadow-sm ${b.color}`}></div>
+            <div key={i} className={`w-2 h-2 md:w-4 md:h-4 rounded-full shadow-sm ${b.color}`}></div>
           ))}
         </div>
       </div>
@@ -90,27 +90,27 @@ const GameUI: React.FC<GameUIProps> = ({ gameState, onReset }) => {
   }
 
   const CentralDisplay = () => (
-    <div className="flex flex-col items-center mx-2 md:mx-4">
-      <div className="bg-black/60 rounded-xl border border-yellow-600/30 px-3 py-1 flex items-center gap-2">
+    <div className="flex flex-col items-center mx-1 md:mx-4">
+      <div className="bg-black/60 rounded-xl border border-yellow-600/30 px-2 py-0.5 md:px-3 md:py-1 flex items-center gap-1 md:gap-2">
         {/* Coins Icon */}
-        <div className="w-4 h-4 md:w-5 md:h-5 bg-yellow-500 rounded-full border border-yellow-200 shadow-[0_0_10px_orange]"></div>
-        <span className="text-yellow-400 font-black text-sm md:text-xl font-mono">200</span>
+        <div className="w-3 h-3 md:w-5 md:h-5 bg-yellow-500 rounded-full border border-yellow-200 shadow-[0_0_10px_orange]"></div>
+        <span className="text-yellow-400 font-black text-xs md:text-xl font-mono">200</span>
       </div>
     </div>
   )
 
   const Controls = () => (
-    <div className="flex items-center gap-2 md:gap-4 ml-2">
+    <div className="flex items-center gap-1 md:gap-4 ml-1 md:ml-2">
       {/* Cue Control */}
-      <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gray-200 border-4 border-gray-400 shadow-inner flex items-center justify-center relative cursor-pointer active:scale-95 transition-transform">
-        <div className="w-2 h-2 bg-red-600 rounded-full absolute top-2 right-3"></div> {/* Spin dot simulation */}
-        <div className="text-[8px] text-gray-500 absolute bottom-1">SPIN</div>
+      <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-gray-200 border-2 md:border-4 border-gray-400 shadow-inner flex items-center justify-center relative cursor-pointer active:scale-95 transition-transform">
+        <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-red-600 rounded-full absolute top-1.5 right-2 md:top-2 md:right-3"></div> {/* Spin dot simulation */}
+        <div className="text-[6px] md:text-[8px] text-gray-500 absolute bottom-0.5 md:bottom-1">SPIN</div>
       </div>
       {/* Cues Selector */}
-      <button className="w-10 h-10 md:w-12 md:h-12 bg-blue-500 rounded-lg border-b-4 border-blue-700 flex items-center justify-center active:border-b-0 active:translate-y-1 transition-all">
-        <div className="w-8 h-8 relative">
-          <div className="absolute w-[2px] h-full bg-yellow-200 left-1/2 -rotate-45 transform origin-center border border-black/20"></div>
-          <div className="absolute w-[2px] h-full bg-white left-1/2 rotate-12 transform origin-center border border-black/20 ml-1"></div>
+      <button className="w-8 h-8 md:w-12 md:h-12 bg-blue-500 rounded-lg border-b-2 md:border-b-4 border-blue-700 flex items-center justify-center active:border-b-0 active:translate-y-1 transition-all">
+        <div className="w-5 h-5 md:w-8 md:h-8 relative">
+          <div className="absolute w-[1.5px] md:w-[2px] h-full bg-yellow-200 left-1/2 -rotate-45 transform origin-center border border-black/20"></div>
+          <div className="absolute w-[1.5px] md:w-[2px] h-full bg-white left-1/2 rotate-12 transform origin-center border border-black/20 ml-0.5 md:ml-1"></div>
         </div>
       </button>
     </div>

@@ -462,7 +462,7 @@ const PoolTable: React.FC<PoolTableProps> = ({ balls, cueBall, isAiming, onShoot
   return (
     <div
       ref={containerRef}
-      className="relative w-full max-w-[816px] rounded-lg shadow-2xl overflow-hidden border-4 md:border-8 border-yellow-900 bg-gray-900 mx-auto"
+      className="relative w-full max-w-full rounded-lg shadow-2xl overflow-hidden border-4 md:border-8 border-yellow-900 bg-gray-900 mx-auto"
     >
       <canvas
         ref={canvasRef}

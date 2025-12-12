@@ -370,9 +370,9 @@ const App: React.FC = () => {
 
 
 
-        {/* Game Area - Perfectly Centered */}
-        <div className="flex-1 w-full flex items-center justify-center p-2 sm:p-4">
-          <div className="relative w-full h-full max-w-[95vw] max-h-[70vh] lg:max-w-[1100px] lg:max-h-[600px] flex items-center justify-center">
+        {/* Game Area - Perfectly Centered & Maximized */}
+        <div className="flex-1 w-full flex items-center justify-center p-0 landscape:p-1 md:p-4 perspective-1000">
+          <div className="relative w-full h-full max-w-[100vw] landscape:max-w-[98vw] max-h-[85vh] landscape:max-h-[85vh] lg:max-w-[1200px] lg:max-h-[800px] flex items-center justify-center transition-all duration-300">
             <PoolTable
               balls={gameState.balls}
               cueBall={gameState.cueBall}
